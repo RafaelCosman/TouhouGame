@@ -24,9 +24,10 @@ abstract class Enemy
     ellipse(loc.x, loc.y, enemySize, enemySize);
   }
 
-  void run()
+  //Returns true when the enemy survives
+  boolean run()
   {
-    vel.limit(speed);
+    vel.setMag(speed);
     loc.add(vel);
 
     if (p.loc.x > loc.x)
@@ -36,17 +37,13 @@ abstract class Enemy
 
     if (loc.dist(p.loc) <= enemySize / 2 + (p.playerSize / 2) && fatal)
       shouldRestart = true;
-
-    for (int i = 0; i <= enemies.size() - 1; i ++)
+    if (hp <= 0)
     {
-      Enemy e = enemies.get(i);
-      if (e.hp <= 0)
-      {
-        enemies.remove(i);
-        score ++;
-        break;
-      }
+      score ++;
+      return false;
     }
+    else
+      return true;
   }
 
   void shoot()
@@ -75,10 +72,10 @@ abstract class Enemy
     vel.y += OCCILATION_MODIFIER * (targetLoc.y - loc.y);
   }
 
-  void moveTowardsLoc(PVector targetLoc, float curvatureLimit)
+  void moveTowardsLoc(PVector targetLoc, float curvaturesetMag)
   {
     PVector velChange = PVector.sub(p.loc, loc);
-    velChange.limit(curvatureLimit);
+    velChange.setMag(curvaturesetMag);
     vel.add(velChange);
   }
   boolean isTimeToShoot()

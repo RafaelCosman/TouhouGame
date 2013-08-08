@@ -11,13 +11,13 @@ class EnemyMoveTowardsPlayer extends Enemy
     super.show();
   }
 
-  void run()
+  boolean run()
   {
     if (isTimeToShoot())
       shoot();
 
     moveTowardsYLoc(p.loc);
-    super.run();
+    return super.run();
   }
 }
 

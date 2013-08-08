@@ -11,7 +11,7 @@ class EnemyMoveTowardsPredicted extends Enemy
     super.show();
   }
 
-  void run()
+  boolean run()
   {
     if (isTimeToShoot())
       shoot();
@@ -19,7 +19,7 @@ class EnemyMoveTowardsPredicted extends Enemy
     final int EXPECTED_PLAYER_SPEED = 20;
     moveTowardsYLoc(PVector.add(p.loc, PVector.mult(p.vel, EXPECTED_PLAYER_SPEED)));
 
-    super.run();
+    return super.run();
   }
 }
 

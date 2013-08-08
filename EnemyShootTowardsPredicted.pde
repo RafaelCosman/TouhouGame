@@ -11,14 +11,14 @@ class EnemyShootTowardsPredicted extends Enemy
     super.show();
   }
 
-  void run()
+  boolean run()
   {
     //PVector p = ;
     if (isTimeToShoot())
       shootTowards(PVector.add(p.loc, PVector.mult(p.vel, PVector.dist(loc, p.loc) / bulletSpeed)));
 
     moveTowardsLoc(p.loc, .75);
-    super.run();
+    return super.run();
   }
 }
 

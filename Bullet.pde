@@ -35,7 +35,8 @@ abstract class Bullet
         p.hp -= damage;
         exists = false;
       }
-      vel.limit(speed);
+
+      vel.setMag(speed);
       loc.add(vel);
     }
   }

@@ -3,6 +3,7 @@ PFont font;
 Player p;
 
 ArrayList<Enemy> enemies;
+ArrayList<Enemy> survivingEnemies;
 ArrayList<Bullet> bullets;
 
 int enemyAppearTime;
@@ -42,6 +43,7 @@ void reset()
   bullets = new ArrayList<Bullet>();
 
   enemies = new ArrayList<Enemy>();
+  survivingEnemies = new ArrayList<Enemy>();
 
   //enemies.add(new EnemyMoveTowardsPlayer(new PVector(), new PVector(100, 100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyMoveTowardsPredicted(new PVector(), new PVector(width-100, height-100), 30, 30, millis(), 500, 6.0, 7.0, true));
@@ -57,6 +59,7 @@ void draw()
 {
   if (!shouldRestart)
   {
+    survivingEnemies.clear();
     fill(127.5, 175);
     rect(width / 2, height / 2, width, height);
 
@@ -90,9 +93,15 @@ void draw()
     }
     for (Enemy e : enemies)
     {
-      e.run();
-      e.show();
+      boolean survived = e.run();
+      if (survived)
+      {
+        e.show();
+        survivingEnemies.add(e);
+      }
     }
+    enemies.retainAll(survivingEnemies);
+
     p.show();
     p.run();
   } else {

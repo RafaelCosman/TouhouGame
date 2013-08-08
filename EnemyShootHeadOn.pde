@@ -11,13 +11,13 @@ class EnemyShootHeadOn extends Enemy
     super.show();
   }
 
-  void run()
+  boolean run()
   {
     if (isTimeToShoot())
       shootTowards(p.loc);
 
     moveTowardsYLoc(p.loc);
-    super.run();
+    return super.run();
   }
 }
 
