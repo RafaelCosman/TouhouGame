@@ -1,8 +1,8 @@
 class EnemyShootTowardsPredicted extends Enemy
 {
-  EnemyShootTowardsPredicted(PVector vel, PVector loc, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, float speed, float bulletSpeed, boolean facingRight, boolean fatal)
+  EnemyShootTowardsPredicted(PVector vel, PVector loc, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, float speed, float bulletSpeed, boolean facingRight)
   {
-    super(vel, loc, enemySize, hp, shootTimeCurrent, shootTimeDeadline, speed, bulletSpeed, facingRight, fatal);
+    super(vel, loc, enemySize, hp, shootTimeCurrent, shootTimeDeadline, speed, bulletSpeed, facingRight);
   }
 
   void show()
@@ -13,7 +13,6 @@ class EnemyShootTowardsPredicted extends Enemy
 
   boolean run()
   {
-    //PVector p = ;
     if (isTimeToShoot())
       shootTowards(PVector.add(p.loc, PVector.mult(p.vel, PVector.dist(loc, p.loc) / bulletSpeed)));
 

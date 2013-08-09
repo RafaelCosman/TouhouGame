@@ -8,6 +8,7 @@ ArrayList<Bullet> bullets;
 
 int enemyAppearTime;
 int score;
+int bombsRemaining;
 
 float enemyAppearRate;
 
@@ -32,14 +33,14 @@ void reset()
   shouldRestart = false;
   font = createFont("Arial", 32);
   textFont(font);
-  textAlign(LEFT, TOP);
 
   enemyAppearTime = millis();
   score = 0;
+  bombsRemaining = 3;
 
   enemyAppearRate = 3000;
 
-  p = new Player(new PVector(), new PVector(width / 2, height / 2), 20, 1, millis(), 4.0, true);
+  p = new Player(new PVector(), new PVector(width / 2, height / 2), 20, 1, millis(), 5.0, true);
   bullets = new ArrayList<Bullet>();
 
   enemies = new ArrayList<Enemy>();
@@ -48,11 +49,10 @@ void reset()
   //enemies.add(new EnemyMoveTowardsPlayer(new PVector(), new PVector(100, 100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyMoveTowardsPredicted(new PVector(), new PVector(width-100, height-100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyShootHeadOn(new PVector(), new PVector(0, 0), 30, 30, millis(), 500, 6.0, 7.0, true));
-  enemies.add(new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 99999999, 7.0, 7.0, true, false));
-  Enemy e = enemies.get(enemies.size() - 1);
+  Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 1000, 7.0, 7.0, true);
+  enemies.add(e);
   while (e.loc.dist (p.loc) <= 500)
     e.loc.set(random(width), random(height));
-  e.fatal = true;
 }
 
 void draw()
@@ -63,16 +63,18 @@ void draw()
     fill(127.5, 175);
     rect(width / 2, height / 2, width, height);
 
+    textAlign(LEFT, TOP);
     fill(0);
     text("Score: " + score, 0, 0);
+    textAlign(RIGHT, TOP);
+    text("Bombs: " + bombsRemaining, width, 0);
 
     if (millis() - enemyAppearTime >= enemyAppearRate)
     {
-      enemies.add(new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 999999999, 7.0, 7.0, true, false));
-      Enemy e = enemies.get(enemies.size() - 1);
+      Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 1000, 7.0, 7.0, true);
+      enemies.add(e);
       while (e.loc.dist (p.loc) <= 500)
         e.loc.set(random(width), random(height));
-      e.fatal = true;
       enemyAppearRate /= .99;
       enemyAppearTime = millis();
     }
@@ -91,6 +93,7 @@ void draw()
       b.run();
       b.show();
     }
+
     for (Enemy e : enemies)
     {
       boolean survived = e.run();
@@ -102,8 +105,8 @@ void draw()
     }
     enemies.retainAll(survivingEnemies);
 
-    p.show();
     p.run();
+    p.show();
   } else {
     fill(255);
     text("Score: " + score, 0, 0);
@@ -112,33 +115,38 @@ void draw()
 
 void keyPressed()
 {
-  if (key == 'a')
+  if (key == 'a' || key == 'A')
     keys[0] = true;
-  if (key == 'd')
+  if (key == 'd' || key == 'D')
     keys[1] = true;
-  if (key == 'w')
+  if (key == 'w' || key == 'W')
     keys[2] = true;
-  if (key == 's')
+  if (key == 's' || key == 'S')
     keys[3] = true;
-  if (key == 'p')
+  if (keyCode == SHIFT)
     keys[4] = true;
   if (key == 'r')
     reset();
   if (key == 'f')
     autoFire = !autoFire;
+  if (key == ' ' && bombsRemaining > 0)
+  {
+    bullets.clear();
+    bombsRemaining --;
+  }
 }
 
 void keyReleased()
 {
-  if (key == 'a')
+  if (key == 'a' || key == 'A')
     keys[0] = false;
-  if (key == 'd')
+  if (key == 'd' || key == 'D')
     keys[1] = false;
-  if (key == 'w')
+  if (key == 'w' || key == 'W')
     keys[2] = false;
-  if (key == 's')
+  if (key == 's' || key == 'S')
     keys[3] = false;
-  if (key == 'p')
+  if (keyCode == SHIFT)
     keys[4] = false;
 }
 

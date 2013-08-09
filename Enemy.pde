@@ -3,9 +3,9 @@ abstract class Enemy
   PVector vel, loc;
   int enemySize, hp, shootTimeCurrent, shootTimeDeadline;
   float speed, bulletSpeed;
-  boolean facingRight, fatal;
+  boolean facingRight;
 
-  Enemy(PVector vel, PVector loc, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, float speed, float bulletSpeed, boolean facingRight, boolean fatal)
+  Enemy(PVector vel, PVector loc, int enemySize, int hp, int shootTimeCurrent, int shootTimeDeadline, float speed, float bulletSpeed, boolean facingRight)
   {
     this.vel = vel;
     this.loc = loc;
@@ -16,7 +16,6 @@ abstract class Enemy
     this.speed = speed;
     this.bulletSpeed = bulletSpeed;
     this.facingRight = facingRight;
-    this.fatal = fatal;
   }
 
   void show()
@@ -35,8 +34,11 @@ abstract class Enemy
     else
       facingRight = false;
 
-    if (loc.dist(p.loc) <= enemySize / 2 + (p.playerSize / 2) && fatal)
-      shouldRestart = true;
+    if (loc.dist(p.loc) <= enemySize / 2 + (p.playerSize / 2))
+    {
+      p.hp --;
+      return false;
+    }
     if (hp <= 0)
     {
       score ++;

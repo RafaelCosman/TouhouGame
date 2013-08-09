@@ -32,25 +32,30 @@ class Player
 
   void run()
   {
-    loc.add(vel);
-
-    float FRICTION = .85;
-    vel.mult(FRICTION);
-
-    final int ACCEL = 1;
-    if (keys[0])
-      vel.x -= ACCEL;
-    if (keys[1])
-      vel.x += ACCEL;
-    if (keys[2])
-      vel.y -= ACCEL;
-    if (keys[3])
-      vel.y += ACCEL;
-
-    if (keys[4])
-      speed = 2.0;
+    if (keys[0] || keys[1] || keys[2] || keys[3])
+    {
+      vel.set(0, 0, 0);
+      if (keys[0])
+        vel.x = -1;
+      if (keys[1])
+        vel.x = 1;
+      if (keys[2])
+        vel.y = -1;
+      if (keys[3])
+        vel.y = 1;
+      if (keys[4])
+        speed = 2.5;
+      else
+        speed = 5.0;
+      vel.setMag(speed);
+    }
     else
-      speed = 4.0;
+    {
+      float FRICTION = .85;
+      vel.mult(FRICTION);
+    }
+
+    loc.add(vel);
 
     pushFromEdge();
 
