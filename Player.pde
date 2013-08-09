@@ -37,7 +37,7 @@ class Player
   {
     //pushFromEdge();
 
-    if (millis() - shootTime >= 100 && (mousePressed || autoFire))
+    if (shootTime >= 4 && (mousePressed || autoFire))
     {
       final int BULLET_SPEED = 99;
       PVector direction;
@@ -48,8 +48,9 @@ class Player
 
       bullets.add(new BulletStraight(direction, copy(p.loc), 5, 1, 7.0, true, true));
 
-      shootTime = millis();
+      shootTime = 0;
     }
+    shootTime ++;
 
     if (keyCode == LEFT)
       facingRight = false; else if (keyCode == RIGHT)

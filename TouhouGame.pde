@@ -5,13 +5,14 @@ Player p;
 ArrayList<Enemy> enemies;
 ArrayList<Enemy> survivingEnemies;
 ArrayList<Bullet> bullets;
+ArrayList<Bullet> splitBullets;
 ArrayList<Terrain> terrains;
 
 int enemyAppearTime;
 int score;
 int bombsRemaining;
 
-float enemyAppearRate;
+int enemyAppearDeadline;
 
 boolean[] keys;
 boolean autoFire;
@@ -37,24 +38,28 @@ void reset()
   font = createFont("Arial", 32);
   textFont(font);
 
-  enemyAppearTime = millis();
+  enemyAppearTime = 0;
   score = 0;
   bombsRemaining = 3;
 
-  enemyAppearRate = 3000;
-  p = new Player(new PVector(), new PVector(width / 2, height / 2), new PVector(), 20, 1, millis(), 5.0, true);
+  enemyAppearDeadline = 300;
+  p = new Player(new PVector(), new PVector(width / 2, height / 2), new PVector(), 20, 5, 0, 5.0, true);
   bullets = new ArrayList<Bullet>();
+  splitBullets = new ArrayList<Bullet>();
   enemies = new ArrayList<Enemy>();
   survivingEnemies = new ArrayList<Enemy>();
   terrains = new ArrayList();
 
   terrainColor = color(255);
 
-  //enemies.add(new EnemyMoveTowardsPlayer(new PVector(), new PVector(100, 100), 30, 30, millis(), 500, 6.0, 7.0, true));
-  //enemies.add(new EnemyMoveTowardsPredicted(new PVector(), new PVector(width-100, height-100), 30, 30, millis(), 500, 6.0, 7.0, true));
-  //enemies.add(new EnemyShootHeadOn(new PVector(), new PVector(0, 0), 30, 30, millis(), 500, 6.0, 7.0, true));
-  Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 9999999, 7.0, 7.0, true);
+  Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 100, 7.0, 7.0, true);
   enemies.add(e);
+  //Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 9999999, 7.0, 7.0, true);
+  //enemies.add(e);
+  //Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 9999999, 7.0, 7.0, true);
+  //enemies.add(e);
+  //Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 9999999, 7.0, 7.0, true);
+  //enemies.add(e);
   while (e.loc.dist (p.loc) <= 500)
     e.loc.set(random(width), random(height));
   terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
@@ -76,14 +81,14 @@ void draw()
     textAlign(RIGHT, TOP);
     text("Bombs: " + bombsRemaining, width, 0);
 
-    if (millis() - enemyAppearTime >= enemyAppearRate)
+    if (enemyAppearTime >= enemyAppearDeadline)
     {
-      Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 99999, 7.0, 7.0, true);
+      Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 100, 7.0, 7.0, true);
       enemies.add(e);
       while (e.loc.dist (p.loc) <= 500)
         e.loc.set(random(width), random(height));
-      enemyAppearRate /= .99;
-      enemyAppearTime = millis();
+      enemyAppearDeadline --;
+      enemyAppearTime = 0;
     }
 
     for (Terrain t : terrains)
@@ -108,6 +113,19 @@ void draw()
       b.show();
     }
 
+    for (Bullet b : splitBullets)
+      bullets.add(b);
+
+    for (int i = 0; i <= splitBullets.size() - 1; i ++)
+    {
+      Bullet b = splitBullets.get(i);
+      if (!b.exists)
+      {
+        splitBullets.remove(i);
+        break;
+      }
+    }
+
     for (Enemy e : enemies)
     {
       boolean survived = e.run();
@@ -117,6 +135,7 @@ void draw()
         survivingEnemies.add(e);
       }
     }
+
     enemies.retainAll(survivingEnemies);
 
     p.run();
@@ -145,11 +164,8 @@ void keyPressed()
     autoFire = !autoFire;
   if (key == ' ' && bombsRemaining > 0)
   {
-    for (Bullet b : bullets)
-    {
-      if (!b.madeByPlayer)
-        bullets.remove(b);
-    }
+    bullets.clear();
+    splitBullets.clear();
     bombsRemaining --;
   }
 }

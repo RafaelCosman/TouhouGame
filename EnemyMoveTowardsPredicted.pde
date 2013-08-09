@@ -14,7 +14,14 @@ class EnemyMoveTowardsPredicted extends Enemy
   boolean run()
   {
     if (isTimeToShoot())
-      shoot();
+    {
+      PVector direction;
+      if (facingRight)
+        direction = new PVector(99, 0);
+      else
+        direction = new PVector(-99, 0);
+      shootTowards(direction);
+    }
 
     final int EXPECTED_PLAYER_SPEED = 20;
     moveTowardsYLoc(PVector.add(p.loc, PVector.mult(p.vel, EXPECTED_PLAYER_SPEED)));

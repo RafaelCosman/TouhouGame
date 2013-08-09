@@ -18,7 +18,7 @@ class Bullet
 
   void show()
   {
-    ellipse(loc.x, loc.y, bulletSize, bulletSize);
+    ellipse(loc, bulletSize);
   }
 
   void run()
@@ -29,15 +29,21 @@ class Bullet
       {
         e.hp -= damage;
         exists = false;
-      } else if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
-      {
-        p.hp -= damage;
-        exists = false;
       }
+    }
+
+    if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
+    {
+      p.hp -= damage;
+      exists = false;
     }
 
     vel.setMag(speed);    
     loc.add(vel);
+
+    boolean onMap = loc.x > 0 && loc.x < width && loc.y > 0 && loc.y < height;
+    if (!onMap)
+      exists = false;
   }
 }
 

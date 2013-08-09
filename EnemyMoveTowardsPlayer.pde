@@ -14,7 +14,13 @@ class EnemyMoveTowardsPlayer extends Enemy
   boolean run()
   {
     if (isTimeToShoot())
-      shoot();
+    {
+      Bullet b = new BulletSplit(PVector.sub(p.loc, loc), copy(loc), 20, 1, 0, 100, 15, 7.0, false, true);
+      bullets.add(b);
+
+      shootTimeCurrent = 0;
+    }
+    shootTimeCurrent ++;
 
     moveTowardsYLoc(p.loc);
     return super.run();

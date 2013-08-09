@@ -17,3 +17,8 @@ void rect(PVector loc, PVector dimensions)
 {
   rect(loc.x, loc.y, dimensions.x, dimensions.y);
 }
+
+void ellipse(PVector loc, int diameter)
+{
+  ellipse(loc.x, loc.y, diameter, diameter);
+}

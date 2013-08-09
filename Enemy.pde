@@ -34,6 +34,8 @@ abstract class Enemy
     else
       facingRight = false;
 
+    shootTimeCurrent ++;
+
     if (loc.dist(p.loc) <= enemySize / 2 + (p.playerSize / 2))
     {
       p.hp --;
@@ -48,41 +50,28 @@ abstract class Enemy
       return true;
   }
 
-  void shoot()
-  {
-    PVector direction;
-    if (facingRight)
-      direction = new PVector(99, 0);
-    else
-      direction = new PVector(-99, 0);
-
-    bullets.add(new BulletStraight(copy(direction), copy(loc), 20, 1, 7.0, false, true));
-
-    shootTimeCurrent = millis();
-  }
-
   void shootTowards(PVector targetLoc)
   {
     bullets.add(new BulletStraight(copy(PVector.sub(targetLoc, loc)), copy(loc), 20, 1, 7.0, false, true));
 
-    shootTimeCurrent = millis();
+    shootTimeCurrent = 0;
   }
 
   void moveTowardsYLoc(PVector targetLoc)
   {
-    final float OCCILATION_MODIFIER = .025;
+    final float OCCILATION_MODIFIER = .075;
     vel.y += OCCILATION_MODIFIER * (targetLoc.y - loc.y);
   }
 
-  void moveTowardsLoc(PVector targetLoc, float curvaturesetMag)
+  void moveTowardsLoc(PVector targetLoc, float curvatureSetMag)
   {
     PVector velChange = PVector.sub(p.loc, loc);
-    velChange.setMag(curvaturesetMag);
+    velChange.setMag(curvatureSetMag);
     vel.add(velChange);
   }
   boolean isTimeToShoot()
   {
-    return millis() - shootTimeCurrent >= shootTimeDeadline;
+    return shootTimeCurrent >= shootTimeDeadline;
   }
 }
 
