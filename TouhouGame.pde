@@ -5,6 +5,7 @@ Player p;
 ArrayList<Enemy> enemies;
 ArrayList<Enemy> survivingEnemies;
 ArrayList<Bullet> bullets;
+ArrayList<Terrain> terrains;
 
 int enemyAppearTime;
 int score;
@@ -42,9 +43,9 @@ void reset()
 
   p = new Player(new PVector(), new PVector(width / 2, height / 2), 20, 1, millis(), 5.0, true);
   bullets = new ArrayList<Bullet>();
-
   enemies = new ArrayList<Enemy>();
   survivingEnemies = new ArrayList<Enemy>();
+  terrains = new ArrayList();
 
   //enemies.add(new EnemyMoveTowardsPlayer(new PVector(), new PVector(100, 100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyMoveTowardsPredicted(new PVector(), new PVector(width-100, height-100), 30, 30, millis(), 500, 6.0, 7.0, true));
@@ -53,6 +54,7 @@ void reset()
   enemies.add(e);
   while (e.loc.dist (p.loc) <= 500)
     e.loc.set(random(width), random(height));
+  terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
 }
 
 void draw()
@@ -78,6 +80,13 @@ void draw()
       enemyAppearRate /= .99;
       enemyAppearTime = millis();
     }
+
+    for (Terrain t : terrains)
+    {
+      t.run();
+      t.show();
+    }
+
     for (int i = 0; i <= bullets.size() - 1; i ++)
     {
       Bullet b = bullets.get(i);

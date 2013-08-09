@@ -35,18 +35,20 @@ class Player
     if (keys[0] || keys[1] || keys[2] || keys[3])
     {
       vel.set(0, 0, 0);
-      if (keys[0])
+      loadPixels();
+      if (keys[0] && pixels[int(loc.y * width + (loc.x - speed))] != color(255))
         vel.x = -1;
-      if (keys[1])
+      if (keys[1] && pixels[int(loc.y * width + (loc.x + speed))] != color(255))
         vel.x = 1;
-      if (keys[2])
+      if (keys[2] && pixels[int((loc.y - speed) * width + loc.x)] != color(255))
         vel.y = -1;
-      if (keys[3])
+      if (keys[3] && pixels[int((loc.y + speed) * width + loc.x)] != color(255))
         vel.y = 1;
+      updatePixels();
       if (keys[4])
         speed = 2.5;
       else
-        speed = 5.0;
+        speed = 10.0;
       vel.setMag(speed);
     }
     else
