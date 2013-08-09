@@ -1,14 +1,17 @@
 class Player
 {
-  PVector vel, loc;
+  PVector vel, loc, nextLoc;
   int playerSize, hp, shootTime;
   float speed;
   boolean facingRight;
 
-  Player(PVector vel, PVector loc, int playerSize, int hp, int shootTime, float speed, boolean facingRight)
+  color c = color(0, 255, 0);
+
+  Player(PVector vel, PVector loc, PVector nextLoc, int playerSize, int hp, int shootTime, float speed, boolean facingRight)
   {
     this.vel = vel;
     this.loc = loc;
+    this.nextLoc = nextLoc;
     this.playerSize = playerSize;
     this.hp = hp;
     this.shootTime = shootTime;
@@ -18,7 +21,7 @@ class Player
 
   void show()
   {
-    fill(0, 255, 0);
+    fill(c);
     if (!facingRight)
       triangle(loc.x - playerSize, loc.y, loc.x + playerSize, loc.y + playerSize, loc.x + playerSize, loc.y - playerSize);
     else
@@ -32,34 +35,7 @@ class Player
 
   void run()
   {
-    if (keys[0] || keys[1] || keys[2] || keys[3])
-    {
-      vel.set(0, 0, 0);
-      loadPixels();
-      if (keys[0] && pixels[int(loc.y * width + (loc.x - speed))] != color(255))
-        vel.x = -1;
-      if (keys[1] && pixels[int(loc.y * width + (loc.x + speed))] != color(255))
-        vel.x = 1;
-      if (keys[2] && pixels[int((loc.y - speed) * width + loc.x)] != color(255))
-        vel.y = -1;
-      if (keys[3] && pixels[int((loc.y + speed) * width + loc.x)] != color(255))
-        vel.y = 1;
-      updatePixels();
-      if (keys[4])
-        speed = 2.5;
-      else
-        speed = 10.0;
-      vel.setMag(speed);
-    }
-    else
-    {
-      float FRICTION = .85;
-      vel.mult(FRICTION);
-    }
-
-    loc.add(vel);
-
-    pushFromEdge();
+    //pushFromEdge();
 
     if (millis() - shootTime >= 100 && (mousePressed || autoFire))
     {
@@ -83,12 +59,34 @@ class Player
       shouldRestart = true;
   }
 
-  void pushFromEdge()
+  void move()
   {
-    if (loc.x < 0 || loc.x > width)
-      vel.x *= -1;
-    if (loc.y < 0 || loc.y > height)
-      vel.y *= -1;
+    vel.set(0, 0, 0);
+
+    if (keys[4])
+      speed = 2.5;
+    else
+      speed = 5.0;
+
+    if (keys[0] || keys[1] || keys[2] || keys[3])
+    {
+      if (keys[0])
+        vel.x = -speed;
+      if (keys[1])
+        vel.x = speed;
+      if (keys[2])
+        vel.y = -speed;
+      if (keys[3])
+      {
+        vel.y = speed;
+      }
+      vel.setMag(speed);
+    }
+    nextLoc.set(PVector.add(loc, vel));
+
+    boolean onMap = nextLoc.x > 0 && nextLoc.x < width && nextLoc.y > 0 && nextLoc.y < height;
+    if (onMap)
+      loc.set(nextLoc);
   }
 }
 

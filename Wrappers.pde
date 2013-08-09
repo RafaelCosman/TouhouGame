@@ -7,3 +7,13 @@ void translate(PVector vec)
 {
   translate(vec.x, vec.y);
 }
+
+void rect(PVector loc, int w, int h)
+{
+  rect(loc.x, loc.y, w, h);
+}
+
+void rect(PVector loc, PVector dimensions)
+{
+  rect(loc.x, loc.y, dimensions.x, dimensions.y);
+}

@@ -1,4 +1,4 @@
-abstract class Bullet
+class Bullet
 {
   PVector vel, loc;
   int bulletSize, damage;
@@ -29,16 +29,15 @@ abstract class Bullet
       {
         e.hp -= damage;
         exists = false;
-      }
-      if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
+      } else if (!madeByPlayer && loc.dist(p.loc) <= bulletSize / 2)
       {
         p.hp -= damage;
         exists = false;
       }
-
-      vel.setMag(speed);
-      loc.add(vel);
     }
+
+    vel.setMag(speed);    
+    loc.add(vel);
   }
 }
 

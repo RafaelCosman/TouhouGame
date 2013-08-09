@@ -17,6 +17,8 @@ boolean[] keys;
 boolean autoFire;
 boolean shouldRestart;
 
+color terrainColor;
+
 void setup()
 {
   size(displayWidth, displayHeight);
@@ -40,17 +42,18 @@ void reset()
   bombsRemaining = 3;
 
   enemyAppearRate = 3000;
-
-  p = new Player(new PVector(), new PVector(width / 2, height / 2), 20, 1, millis(), 5.0, true);
+  p = new Player(new PVector(), new PVector(width / 2, height / 2), new PVector(), 20, 1, millis(), 5.0, true);
   bullets = new ArrayList<Bullet>();
   enemies = new ArrayList<Enemy>();
   survivingEnemies = new ArrayList<Enemy>();
   terrains = new ArrayList();
 
+  terrainColor = color(255);
+
   //enemies.add(new EnemyMoveTowardsPlayer(new PVector(), new PVector(100, 100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyMoveTowardsPredicted(new PVector(), new PVector(width-100, height-100), 30, 30, millis(), 500, 6.0, 7.0, true));
   //enemies.add(new EnemyShootHeadOn(new PVector(), new PVector(0, 0), 30, 30, millis(), 500, 6.0, 7.0, true));
-  Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 1000, 7.0, 7.0, true);
+  Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 9999999, 7.0, 7.0, true);
   enemies.add(e);
   while (e.loc.dist (p.loc) <= 500)
     e.loc.set(random(width), random(height));
@@ -61,6 +64,8 @@ void draw()
 {
   if (!shouldRestart)
   {
+    p.move();
+
     survivingEnemies.clear();
     fill(127.5, 175);
     rect(width / 2, height / 2, width, height);
@@ -73,7 +78,7 @@ void draw()
 
     if (millis() - enemyAppearTime >= enemyAppearRate)
     {
-      Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 1000, 7.0, 7.0, true);
+      Enemy e = new EnemyShootTowardsPredicted(new PVector(), new PVector(random(width), random(height)), 30, 10, millis(), 99999, 7.0, 7.0, true);
       enemies.add(e);
       while (e.loc.dist (p.loc) <= 500)
         e.loc.set(random(width), random(height));
@@ -83,8 +88,8 @@ void draw()
 
     for (Terrain t : terrains)
     {
-      t.run();
       t.show();
+      t.run();
     }
 
     for (int i = 0; i <= bullets.size() - 1; i ++)
@@ -140,7 +145,11 @@ void keyPressed()
     autoFire = !autoFire;
   if (key == ' ' && bombsRemaining > 0)
   {
-    bullets.clear();
+    for (Bullet b : bullets)
+    {
+      if (!b.madeByPlayer)
+        bullets.remove(b);
+    }
     bombsRemaining --;
   }
 }

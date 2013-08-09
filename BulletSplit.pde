@@ -1,6 +1,6 @@
-class BulletStraight extends Bullet
+class BulletSplit extends Bullet
 {
-  BulletStraight(PVector vel, PVector loc, int bulletSize, int damage, float speed, boolean madeByPlayer, boolean exists)
+  BulletSplit(PVector vel, PVector loc, int bulletSize, int damage, float speed, boolean madeByPlayer, boolean exists)
   {
     super(vel, loc, bulletSize, damage, speed, madeByPlayer, false);
   }
@@ -11,7 +11,7 @@ class BulletStraight extends Bullet
       fill(0, 255, 0);
     else
       fill(255, 0, 0);
-      
+
     super.show();
   }
 
