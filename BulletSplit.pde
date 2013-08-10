@@ -2,9 +2,9 @@ class BulletSplit extends Bullet
 {
   int splitTimeCurrent, splitTimeDeadline, splitNum;
 
-  BulletSplit(PVector vel, PVector loc, int bulletSize, int damage, int splitTimeCurrent, int splitTimeDeadline, int splitNum, float speed, boolean madeByPlayer, boolean exists)
+  BulletSplit(PVector vel, PVector loc, int bulletSize, int damage, int splitTimeCurrent, int splitTimeDeadline, int splitNum, float speed, boolean madeByPlayer)
   {
-    super(vel, loc, bulletSize, damage, speed, madeByPlayer, true);
+    super(vel, loc, bulletSize, damage, speed, madeByPlayer);
     this.splitTimeCurrent = splitTimeCurrent;
     this.splitTimeDeadline = splitTimeDeadline;
     this.splitNum = splitNum;
@@ -34,7 +34,7 @@ class BulletSplit extends Bullet
       {
         rotateAmount.x = m * cos(a);
         rotateAmount.y = m * sin(a);
-        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), 20, 1, 1.0, false, true));
+        splitBullets.add(new BulletStraight(copy(rotateAmount), copy(loc), 20, 1, 7.0, false, true));
       }
       splitTimeCurrent = 0;
     }

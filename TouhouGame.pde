@@ -3,10 +3,10 @@ PFont font;
 Player p;
 
 ArrayList<Enemy> enemies;
-ArrayList<Enemy> survivingEnemies;
 ArrayList<Bullet> bullets;
 ArrayList<Bullet> splitBullets;
 ArrayList<Terrain> terrains;
+ArrayList<Mist> mists;
 
 int enemyAppearTime;
 int score;
@@ -25,6 +25,7 @@ void setup()
   size(displayWidth, displayHeight);
   smooth();
   noStroke();
+  strokeWeight(5);
   rectMode(CENTER);
   keys = new boolean[5];
   autoFire = true;
@@ -47,8 +48,8 @@ void reset()
   bullets = new ArrayList<Bullet>();
   splitBullets = new ArrayList<Bullet>();
   enemies = new ArrayList<Enemy>();
-  survivingEnemies = new ArrayList<Enemy>();
   terrains = new ArrayList();
+  mists = new ArrayList<Mist>();
 
   terrainColor = color(255);
 
@@ -65,86 +66,98 @@ void reset()
   terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
 }
 
+
 void draw()
 {
-  if (!shouldRestart)
+  if (shouldRestart)
   {
-    p.move();
-
-    survivingEnemies.clear();
-    fill(127.5, 175);
-    rect(width / 2, height / 2, width, height);
-
-    textAlign(LEFT, TOP);
-    fill(0);
-    text("Score: " + score, 0, 0);
-    textAlign(RIGHT, TOP);
-    text("Bombs: " + bombsRemaining, width, 0);
-
-    if (enemyAppearTime >= enemyAppearDeadline)
-    {
-      Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 100, 7.0, 7.0, true);
-      enemies.add(e);
-      while (e.loc.dist (p.loc) <= 500)
-        e.loc.set(random(width), random(height));
-      enemyAppearDeadline --;
-      enemyAppearTime = 0;
-    }
-
-    for (Terrain t : terrains)
-    {
-      t.show();
-      t.run();
-    }
-
-    for (int i = 0; i <= bullets.size() - 1; i ++)
-    {
-      Bullet b = bullets.get(i);
-      if (!b.exists)
-      {
-        bullets.remove(i);
-        break;
-      }
-    }
-
-    for (Bullet b : bullets)
-    {
-      b.run();
-      b.show();
-    }
-
-    for (Bullet b : splitBullets)
-      bullets.add(b);
-
-    for (int i = 0; i <= splitBullets.size() - 1; i ++)
-    {
-      Bullet b = splitBullets.get(i);
-      if (!b.exists)
-      {
-        splitBullets.remove(i);
-        break;
-      }
-    }
-
-    for (Enemy e : enemies)
-    {
-      boolean survived = e.run();
-      if (survived)
-      {
-        e.show();
-        survivingEnemies.add(e);
-      }
-    }
-
-    enemies.retainAll(survivingEnemies);
-
-    p.run();
-    p.show();
-  } else {
     fill(255);
     text("Score: " + score, 0, 0);
+    return;
   }
+  ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
+
+  
+  p.move();
+
+  fill(127.5, 175);
+  rect(width / 2, height / 2, width, height);
+
+  textAlign(LEFT, TOP);
+  fill(0);
+  text("Score: " + score, 0, 0);
+  textAlign(RIGHT, TOP);
+  text("Bombs: " + bombsRemaining, width, 0);
+
+  if (enemyAppearTime >= enemyAppearDeadline)
+  {
+    Enemy e = new EnemyMoveTowardsPlayer(new PVector(), new PVector(random(width), random(height)), 30, 10, 0, 100, 7.0, 7.0, true);
+    enemies.add(e);
+    while (e.loc.dist (p.loc) <= 500)
+      e.loc.set(random(width), random(height));
+    enemyAppearDeadline --;
+    enemyAppearTime = 0;
+  }
+
+  for (Terrain t : terrains)
+  {
+    t.show();
+    t.run();
+  }
+
+  for (int i = 0; i <= bullets.size() - 1; i ++)
+  {
+    Bullet b = bullets.get(i);
+    if (!b.exists)
+    {
+      bullets.remove(i);
+      break;
+    }
+  }
+
+  for (Bullet b : bullets)
+  {
+    b.run();
+    b.show();
+  }
+
+  for (Bullet b : splitBullets)
+    bullets.add(b);
+
+  splitBullets.clear();
+
+  for (Enemy e : enemies)
+  {
+    boolean survived = e.run();
+    if (survived)
+    {
+      e.show();
+      survivingEnemies.add(e);
+    }
+  }
+
+  enemies = survivingEnemies;
+
+  for (int i = 0; i <= mists.size() - 1; i ++)
+  {
+    Mist m = mists.get(i);
+    if (!m.exists)
+    {
+      mists.remove(i);
+      break;
+    }
+  }
+
+  for (Mist m : mists)
+  {
+    m.run();
+    m.show();
+  }
+
+  p.run();
+  p.show();
 }
+
 
 void keyPressed()
 {

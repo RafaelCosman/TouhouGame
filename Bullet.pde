@@ -5,7 +5,7 @@ class Bullet
   float speed;
   boolean madeByPlayer, exists;
 
-  Bullet(PVector vel, PVector loc, int bulletSize, int damage, float speed, boolean madeByPlayer, boolean exists)
+  Bullet(PVector vel, PVector loc, int bulletSize, int damage, float speed, boolean madeByPlayer)
   {
     this.vel = vel;
     this.loc = loc;

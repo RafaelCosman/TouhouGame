@@ -22,3 +22,8 @@ void ellipse(PVector loc, int diameter)
 {
   ellipse(loc.x, loc.y, diameter, diameter);
 }
+
+void point(PVector loc)
+{
+  point(loc.x, loc.y);
+}

@@ -20,7 +20,17 @@ abstract class Enemy
 
   void show()
   {
-    ellipse(loc.x, loc.y, enemySize, enemySize);
+    ellipse(loc, enemySize);
+    for (int i = 0; i <= 50; i ++)
+    {
+      int r = int(random(1, 10));
+      if (r == 1)
+      {
+        PVector offset = PVector.random2D();
+        offset.setMag(random(enemySize / 2, enemySize / 2 + 10));
+        mists.add(new Mist(PVector.add(loc, offset), int(random(127, 255))));
+      }
+    }
   }
 
   //Returns true when the enemy survives
