@@ -7,6 +7,7 @@ ArrayList<Bullet> bullets;
 ArrayList<Bullet> splitBullets;
 ArrayList<Terrain> terrains;
 ArrayList<Mist> mists;
+ArrayList<Tree> trees;
 
 int enemyAppearTime;
 int score;
@@ -50,6 +51,7 @@ void reset()
   enemies = new ArrayList<Enemy>();
   terrains = new ArrayList();
   mists = new ArrayList<Mist>();
+  trees = new ArrayList<Tree>();
 
   terrainColor = color(255);
 
@@ -64,6 +66,7 @@ void reset()
   while (e.loc.dist (p.loc) <= 500)
     e.loc.set(random(width), random(height));
   terrains.add(new Terrain(new PVector(-5, 0), new PVector(width, height), new PVector(100, 500)));
+  trees.add(new Tree(-1, 100*random(0.25, 0.75), (int)random(80, 120), false));
 }
 
 
@@ -77,7 +80,7 @@ void draw()
   }
   ArrayList<Enemy> survivingEnemies = new ArrayList<Enemy>();
 
-  
+
   p.move();
 
   fill(127.5, 175);
@@ -125,6 +128,11 @@ void draw()
     bullets.add(b);
 
   splitBullets.clear();
+
+  for (Tree t : trees)
+  {
+    t.show();
+  }
 
   for (Enemy e : enemies)
   {
